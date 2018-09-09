@@ -257,7 +257,7 @@ public class BluetoothConnectionService {
                     bytes = mmInStream.read(buffer);
                     String incomingMessage = new String(buffer, 0, bytes);
                     //Log.d(TAG, "InputStream: " + incomingMessage);
-                    if(incomingMessage.trim().equals("e")){
+                    if(incomingMessage.trim().equals("emergency")){
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
