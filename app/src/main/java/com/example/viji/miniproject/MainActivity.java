@@ -27,34 +27,38 @@ import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
 
     BluetoothAdapter mBluetoothAdapter;
 
     BluetoothConnectionService mBluetoothConnection;
 
+
     long normalCounter=0,emergencyCounter=0;
 
     TextView emergency,normal;
+
     private static final UUID MY_UUID_INSECURE =
             UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     boolean foundPaired = false;
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: called.");
-        super.onDestroy();
-    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mBluetoothConnection = new BluetoothConnectionService(this);
+
         emergency = (TextView)findViewById(R.id.counterTextEmergency);
         normal = (TextView)findViewById(R.id.counterTextNormal);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 
         if (pairedDevices.size() > 0) {
@@ -72,16 +76,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"Turn on bluetooth and pair with HC-05",Toast.LENGTH_LONG).show();
     }
 
-    //create method for starting connection
-//***remember the conncction will fail and app will crash if you haven't paired first
-    public void startConnection(){
 
-       // startBTConnection(mBTDevice,MY_UUID_INSECURE);
-    }
-
-    /**
-     * starting chat service method
-     */
     public void startBTConnection(BluetoothDevice device, UUID uuid){
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection.");
 

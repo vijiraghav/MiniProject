@@ -18,17 +18,20 @@ class SerialComm:
  
     def send_serial(self, text):
         self.port.write(text)
-        
+
 def main():
+    delay = 100;
     IO.setmode(IO.BCM);
-    IO.setup(14,IO.IN); # GPIO 14 for IR sensor
+    IO.setup(14,IO.IN); 
     ble_comm = SerialComm()
     while True:
-        time.sleep(100);
-        if(IO.input(14)==False): #object is near
+        time.sleep(delay);
+        if(IO.input(14)==False):  
             ble_comm.send_serial("emergency".encode());
+            delay = 10;
         else:
             ble_comm.send_serial("normal".encode());
+            delay = 100;
  
 if __name__ == "__main__":
     main()

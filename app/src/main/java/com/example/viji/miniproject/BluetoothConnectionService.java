@@ -17,6 +17,8 @@ import java.util.UUID;
 
 
 public class BluetoothConnectionService {
+
+
     private static final String TAG = "BluetoothConnectionServ";
 
     private static final String appName = "HC-05";
@@ -36,29 +38,22 @@ public class BluetoothConnectionService {
     Handler mHandler;
 
     private ConnectedThread mConnectedThread;
+
     public BluetoothConnectionService(Context context) {
         mContext = context;
         mainActivity = (MainActivity)mContext;
         mHandler = new Handler();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        //start();
     }
 
 
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     */
     private class AcceptThread extends Thread {
-        
-        // The local server socket
+
         private final BluetoothServerSocket mmServerSocket;
 
         public AcceptThread(){
             BluetoothServerSocket tmp = null;
 
-            // Create a new listening server socket
             try{
                 tmp = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(appName, MY_UUID_INSECURE);
 
@@ -76,8 +71,6 @@ public class BluetoothConnectionService {
             BluetoothSocket socket = null;
 
             try{
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
                 Log.d(TAG, "run: RFCOM server socket start.....");
 
                 socket = mmServerSocket.accept();
@@ -88,7 +81,6 @@ public class BluetoothConnectionService {
                 Log.e(TAG, "AcceptThread: IOException: " + e.getMessage() );
             }
 
-            //talk about this is in the 3rd
             if(socket != null){
                 connected(socket,mmDevice);
             }
@@ -107,11 +99,6 @@ public class BluetoothConnectionService {
 
     }
 
-    /**
-     * This thread runs while attempting to make an outgoing connection
-     * with a device. It runs straight through; the connection either
-     * succeeds or fails.
-     */
     private class ConnectThread extends Thread {
         private BluetoothSocket mmSocket;
 
@@ -172,12 +159,6 @@ public class BluetoothConnectionService {
         }
     }
 
-
-
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
     public synchronized void start() {
         Log.d(TAG, "start");
 
@@ -192,12 +173,6 @@ public class BluetoothConnectionService {
         }
     }
 
-    /**
-
-     AcceptThread starts and sits waiting for a connection.
-     Then ConnectThread starts and attempts to make a connection with the other devices AcceptThread.
-     **/
-
     public void startClient(BluetoothDevice device,UUID uuid){
         Log.d(TAG, "startClient: Started.");
 
@@ -209,10 +184,6 @@ public class BluetoothConnectionService {
         mConnectThread.start();
     }
 
-    /**
-     Finally the ConnectedThread which is responsible for maintaining the BTConnection, Sending the data, and
-     receiving incoming data through input/output streams respectively.
-     **/
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -309,17 +280,9 @@ public class BluetoothConnectionService {
         mConnectedThread.start();
     }
 
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
-     */
     public void write(byte[] out) {
-        // Create temporary object
         ConnectedThread r;
 
-        // Synchronize a copy of the ConnectedThread
         Log.d(TAG, "write: Write Called.");
         //perform the write
         mConnectedThread.write(out);
